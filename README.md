@@ -11,7 +11,7 @@ We currently expect that you run this locally on a dev setup.
 ## Howto
 1. Generate signing key
 ```bash
-openssl genrsa -out private.pem 3072
+openssl genrsa -out private.pem -3 3072
 ```
 
 2. Build reader/writer application
@@ -42,7 +42,7 @@ curl -k --data-binary @marblerun-manifest.json https://localhost:4433/manifest
 ```
 6. Launch EdgelessDB as Marble:
 ```bash
-docker run --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edb-sample" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/edgelesssys/edgelessdb-sgx-4gb -marble
+docker run --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edgelessdb_marble" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/edgelesssys/edgelessdb-sgx-4gb -marble
 ```
 
 7. Attestate the MarbleRun cluster:
@@ -57,12 +57,12 @@ curl --cacert marblerun-chain.pem --data-binary @edb-manifest.json https://local
 
 9. Run the reader:
 ```bash
-ego run reader/reader
+EDG_MARBLE_TYPE=reader EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/reader-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun reader/reader
 ```
 
 10. Run the writer:
 ```bash
-ego run writer/writer
+EDG_MARBLE_TYPE=writer EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/writer-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun writer/writer
 ```
 
 11. Visit "http://localhost:8008"

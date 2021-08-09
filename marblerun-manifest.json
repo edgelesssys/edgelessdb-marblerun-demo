@@ -6,10 +6,10 @@
             "SignerID": "67d7b00741440d29922a15a9ead427b6faf1d610238ae9826da345cea4fee0fe"
         },
         "reader": {
-            "Debug": true
+            "UniqueID": "enter reader UniqueID here"
         },
         "writer": {
-            "Debug": true
+            "UniqueID": "enter writer UniqueID here"
         }
     },
     "Marbles": {
@@ -17,9 +17,9 @@
             "Package": "edgelessdb",
             "Parameters": {
                 "Env": {
-                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.MasterKey.Private }}",
-                    "EDB_ROOT_CERT": "{{ pem .Secrets.RootCertificate.Cert }}",
-                    "EDB_ROOT_KEY": "{{ pem .Secrets.RootCertificate.Private }}"
+                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edb_masterkey.Private }}",
+                    "EDB_ROOT_CERT": "{{ pem .Secrets.edb_rootcert.Cert }}",
+                    "EDB_ROOT_KEY": "{{ pem .Secrets.edb_rootcert.Private }}"
                 },
                 "Argv": [
                     "./edb",
