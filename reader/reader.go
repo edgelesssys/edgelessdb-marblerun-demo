@@ -14,7 +14,7 @@ import (
 	"github.com/go-sql-driver/mysql"
 )
 
-const html = `
+const htmlPage = `
 <!DOCTYPE html>
 <html>
 
@@ -72,7 +72,9 @@ type Entry struct {
 func main() {
 	// Setup SQL TLS connection
 	log.Println("Setting up TLS connection parameters...")
-	setupDatabaseTLS()
+	if err := setupDatabaseTLS(); err != nil {
+		panic(err)
+	}
 
 	// Initialize HTTP server
 	http.HandleFunc("/", handler)
@@ -96,9 +98,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Connecting to the database...")
 	db, err := sql.Open("mysql", "reader@/users?tls=edgelessdb")
 	if err != nil {
-		panic(err)
+		log.Println("ERROR: ", err)
+		return
 	} else if err := db.Ping(); err != nil {
-		panic(err)
+		log.Println("ERROR: ", err)
+		return
 	}
 	defer db.Close()
 
@@ -106,14 +110,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Connected, retrieving data...")
 	res, err := db.Query("SELECT * FROM data")
 	if err != nil {
-		panic(err)
+		log.Println("ERROR: ", err)
+		return
 	}
 	defer res.Close()
 	var Results []Entry
 	for res.Next() {
 		var result Entry
 		if err := res.Scan(&result.ID, &result.FirstName, &result.LastName, &result.Email); err != nil {
-			panic(err)
+			log.Println("ERROR: ", err)
+			return
 		}
 		Results = append(Results, result)
 	}
@@ -121,15 +127,17 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// Insert into HTML template
 	t := template.New("index.html")
-	t, err = t.Parse(html)
+	t, err = t.Parse(htmlPage)
 	if err != nil {
-		panic(err)
+		log.Println("ERROR: ", err)
+		return
 	}
 
 	// Display the results to the user
 	err = t.Execute(w, Results)
 	if err != nil {
-		panic(err)
+		log.Println("ERROR: ", err)
+		return
 	}
 }
 
