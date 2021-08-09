@@ -1,0 +1,10 @@
+{
+    "sql": [
+        "CREATE USER reader",
+        "CREATE USER writer",
+        "CREATE DATABASE users CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+        "CREATE TABLE users.data (id MEDIUMINT NOT NULL AUTO_INCREMENT, first_name VARCHAR(64) NOT NULL, last_name VARCHAR(64) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY (id))",
+        "GRANT SELECT ON users.data TO reader",
+        "GRANT INSERT ON users.data TO writer"
+    ]
+}

@@ -1,0 +1,62 @@
+{
+    "Packages": {
+        "edgelessdb": {
+            "SecurityVersion": 1,
+            "ProductID": 16,
+            "SignerID": "67d7b00741440d29922a15a9ead427b6faf1d610238ae9826da345cea4fee0fe"
+        },
+        "reader": {
+            "Debug": true
+        },
+        "writer": {
+            "Debug": true
+        }
+    },
+    "Marbles": {
+        "edgelessdb_marble": {
+            "Package": "edgelessdb",
+            "Parameters": {
+                "Env": {
+                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.MasterKey.Private }}",
+                    "EDB_ROOT_CERT": "{{ pem .Secrets.RootCertificate.Cert }}",
+                    "EDB_ROOT_KEY": "{{ pem .Secrets.RootCertificate.Private }}"
+                },
+                "Argv": [
+                    "./edb",
+                    "-marble"
+                ]
+            }
+        },
+        "reader": {
+            "Package": "reader",
+            "Parameters": {
+                "Env": {
+                    "PORT": "8008"
+                }
+            }
+        },
+        "writer": {
+            "Package": "writer"
+        }
+    },
+    "Secrets": {
+        "edb_masterkey": {
+            "Size": 128,
+            "Shared": true,
+            "Type": "symmetric-key"
+        },
+        "edb_rootcert": {
+            "Size": 256,
+            "Type": "cert-ecdsa",
+            "Shared": true,
+            "Cert": {
+                "IsCA": true,
+                "Subject": {
+                    "Organization": [
+                        "My EdgelessDB root"
+                    ]
+                }
+            }
+        }
+    }
+}
