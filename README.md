@@ -45,7 +45,7 @@ curl -k --data-binary @marblerun-manifest.json https://localhost:4433/manifest
 docker run --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edgelessdb_marble" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/edgelesssys/edgelessdb-sgx-4gb -marble
 ```
 
-7. Attestate the MarbleRun cluster:
+7. Attest the MarbleRun cluster:
 ```bash
 era -c ~/marblerun/build/coordinator-config.json -h localhost:4433 -output-chain marblerun-chain.pem
 ```
