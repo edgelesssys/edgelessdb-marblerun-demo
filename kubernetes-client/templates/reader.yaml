@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edb-reader
+  namespace: {{ .Release.namespace }}
+  labels:
+    app.kubernetes.io/name: edb-reader
+    app.kubernetes.io/part-of: edgelessdb-demo
+    app.kubernetes.io/version: {{ .Values.image.version }}
+spec:
+  replicas: 1
+  selector:
+    matchlabels:
+      app.kubernetes.io/name: edb-reader
+      app.kubernetes.io/version: {{ .Values.image.version }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: edb-reader
+        app.kubernetes.io/part-of: edgelessdb-demo
+        app.kubernetes.io/version: {{ .Values.image.version }}
+        marblerun/marbletype: reader
+    spec:
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - env:
+          - name: OE_SIMULATION
+            value: {{ .Values.simulation }}
+          image: "{{ .Values.image.repository }}/edb-demo/reader:{{ .Values.image.version }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          name: edb-reader
+          ports:
+          - containerPort: 8008
+            name: http
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: edb-reader-http
+  namespace: {{ .Release.namespace }}
+spec:
+  type: LoadBalancer
+  selector:
+    app.kubernetes.io/name: edb-reader
+    app.kubernetes.io/version: {{ .Values.image.version }}
+  ports:
+  - name: http
+    port: 8008
+    targetPort: 8008
