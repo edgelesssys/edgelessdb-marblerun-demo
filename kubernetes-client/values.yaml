@@ -1,0 +1,38 @@
+# Default values for EdgelessDB reader / writer clients
+
+image:
+  pullPolicy: IfNotPresent
+  version: v0.1.0
+  repository: ghcr.io/edgelesssys
+  
+  createdBy: Helm
+
+  # Additional annotations to add to all pods
+  podAnnotations: {}
+
+  # Additional labels to add to all pods
+  podLabels: {}
+
+  # For Private docker registries, authentication is needed.
+  #  Registry secrets are applied to the respective service accounts
+  # pullSecret:
+  # pullSecret: my-private-docker-registry-login-secret
+
+simulation: 0
+
+resources:
+  limits:
+    # Disable this if simulation != 0
+    sgx.intel.com/epc: "10Mi"
+
+# Tolerations constraints for control-plane components
+# https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+tolerations:
+- key: sgx.intel.com/epc
+  operator: Exists
+  effect: NoSchedule
+
+# Node selection constraints for control-plane components
+# https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector.
+nodeSelector:
+  beta.kubernetes.io/os: linux
