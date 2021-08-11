@@ -36,12 +36,17 @@ edb:
   simulation: "0"
   # Heap size of the database enclave in GB. Currently Edgeless Systems provides images for 1GB and 4GB heap sizes.
   heapSize: 1
+  # Label needed when EDB is deployed as a Marble with MarbleRun
+  marbleType: edgelessdb_marble
+  # Set to start EDB in MarbleRun mode
+  launchMarble: false
 
   ## resource limits/requests
-  #resources:
-  #  limits:
-  #    #sgx.intel.com/epc: "1Gi"
-  #    kubernetes.azure.com/sgx_epc_mem_in_MiB: 100
+  resources:
+    limits:
+      # Set to the same value as heapSize
+      sgx.intel.com/epc: "1Gi"
+      #kubernetes.azure.com/sgx_epc_mem_in_MiB: 100
 
 storage:
   # EdgelessDB persistent storage spec

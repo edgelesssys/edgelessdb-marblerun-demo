@@ -75,7 +75,12 @@ func setupDatabaseConnection() (*sql.DB, error) {
 		return nil, errors.New("could not add root cert from PEM")
 	}
 	mysql.RegisterTLSConfig("edgelessdb", &tls.Config{RootCAs: rootCertPool, ServerName: "localhost"})
-	db, err := sql.Open("mysql", "writer@/users?tls=edgelessdb")
+	dbHost := os.Getenv("EDG_DB_HOST")
+	if dbHost == "" {
+		dbHost = "localhost:3306"
+	}
+	dsn := "writer@tcp(" + dbHost + ")/users?tls=edgelessdb"
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		return nil, err
 	} else if err := db.Ping(); err != nil {
