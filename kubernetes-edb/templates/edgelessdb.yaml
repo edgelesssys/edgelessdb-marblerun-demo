@@ -25,6 +25,7 @@ spec:
         app.kubernetes.io/name: EdgelessDB
         app.kubernetes.io/part-of: EdgelessDB
         app.kubernetes.io/version: {{ .Values.global.image.version }}
+        marblerun/marbletype: {{ .Values.edb.marbleType }}
     spec:
       serviceAccountName: edgelessdb
       containers:
@@ -39,6 +40,9 @@ spec:
             value: "{{ .Values.edb.logDir }}"
           - name: OE_SIMULATION
             value: "{{ .Values.edb.simulation }}"
+          {{- if .Values.edb.launchMarble }}
+          args: [ "-marble" ]
+          {{- end }}
           name: edgelessdb
           image: "{{ .Values.global.image.repository }}/edgelessdb-sgx-{{ .Values.edb.heapSize }}gb:{{ .Values.global.image.version }}"
           imagePullPolicy: {{ .Values.global.image.pullPolicy }}
@@ -48,9 +52,7 @@ spec:
             - containerPort: {{ .Values.edb.restApiPort }}
               name: http
           resources:
-            limits:
-              sgx.intel.com/epc: "{{ .Values.edb.heapSize }}Gi"
-          #{{- toYaml .Values.edb.resources | nindent 12 }}
+          {{- toYaml .Values.edb.resources | nindent 12 }}
           volumeMounts:
           - name: edgelessdb-storage
             mountPath: /data

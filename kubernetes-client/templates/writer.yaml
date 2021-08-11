@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: edb-writer
-  namespace: {{ .Release.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: edb-writer
     app.kubernetes.io/part-of: edgelessdb-demo
@@ -10,7 +10,7 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchlabels:
+    matchLabels:
       app.kubernetes.io/name: edb-writer
       app.kubernetes.io/version: {{ .Values.image.version }}
   template:
@@ -32,13 +32,9 @@ spec:
       containers:
         - env:
           - name: OE_SIMULATION
-            value: {{ .Values.simulation }}
+            value: "{{ .Values.simulation }}"
+          - name: EDG_DB_HOST
+            value: "edgelessdb-sql-api.edgelessdb.svc.cluster.local:{{ .Values.sqlPort }}"
           image: "{{ .Values.image.repository }}/edb-demo/writer:{{ .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: edb-writer
-        resources:
-          {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}

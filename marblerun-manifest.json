@@ -6,10 +6,14 @@
             "SignerID": "67d7b00741440d29922a15a9ead427b6faf1d610238ae9826da345cea4fee0fe"
         },
         "reader": {
-            "UniqueID": "enter reader UniqueID here"
+            "SecurityVersion": 1,
+            "ProductID": 17,
+            "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
         },
         "writer": {
-            "UniqueID": "enter writer UniqueID here"
+            "SecurityVersion": 1,
+            "ProductID": 18,
+            "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
         }
     },
     "Marbles": {

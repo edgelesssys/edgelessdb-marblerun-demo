@@ -1,4 +1,6 @@
 *.pem
 */uuid
 reader/main
+reader/reader
 writer/main
+writer/writer

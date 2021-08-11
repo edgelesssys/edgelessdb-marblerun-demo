@@ -18,12 +18,8 @@ image:
   # pullSecret:
   # pullSecret: my-private-docker-registry-login-secret
 
-simulation: 0
-
-resources:
-  limits:
-    # Disable this if simulation != 0
-    sgx.intel.com/epc: "10Mi"
+simulation: "0"
+sqlPort: 3306
 
 # Tolerations constraints for control-plane components
 # https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/

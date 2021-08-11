@@ -96,7 +96,12 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 	// Connect to EdgelessDB
 	log.Println("Connecting to the database...")
-	db, err := sql.Open("mysql", "reader@/users?tls=edgelessdb")
+	dbHost := os.Getenv("EDG_DB_HOST")
+	if dbHost == "" {
+		dbHost = "localhost:3306"
+	}
+	dsn := "reader@tcp(" + dbHost + ")/users?tls=edgelessdb"
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Println("ERROR: ", err)
 		return

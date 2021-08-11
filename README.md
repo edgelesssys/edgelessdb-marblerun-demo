@@ -69,6 +69,110 @@ EDG_MARBLE_TYPE=writer EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUI
 
 12. You should see new user data popping up every 10 seconds.
 
+## Howto on Kubernetes
+
+1. Install MarbleRun
+
+    Using the CLI
+
+    ```bash
+    marblerun install
+    ```
+
+    Wait for the control plane to finish installing
+
+    ```bash
+    marblerun check
+    ```
+
+1. Port forward the Coordinator's Client API
+
+    ```bash
+    kubectl -n marblerun port-forward svc/coordinator-client-api 4433:4433 --address localhost >/dev/null &
+    export MARBLERUN=localhost:4433
+    ```
+
+1. Deploy the MarbleRun manifest
+    
+    ```bash
+    marblerun manifest set marblerun-manifest.json $MARBLERUN
+    ```
+
+1. Launch EdgelessDB
+
+    * Create and annotate the target namespace
+        ```bash
+        kubectl create namespace edgelessdb
+        marblerun namespace add edgelessdb
+        ```
+
+    * Deploy the application using helm
+        ```bash
+        helm install -f ./kubernetes-edb/values.yaml edgelessdb ./kubernetes-edb -n edgelessdb --set edb.launchMarble=true
+        ```
+
+    * Post forward EDB's Client API
+        ```bash
+        kubectl -n edgelessdb port-forward svc/edgelessdb-rest-api 8080:8080 --address localhost >/dev/null &
+        ```
+
+
+1. Attest the MarbleRun cluster and retrieve the certificate chain
+    
+    ```bash
+    marblerun certificate chain $MARBLERUN -o marblerun-chain.pem
+    ```
+
+1. Deploy the EdgelessDB manifest
+
+    ```bash
+    curl --cacert marblerun-chain.pem --data-binary @edb-manifest.json https://localhost:8080/manifest
+    ```
+
+1. Launch `writer` and `reader` applications
+
+    * Create and annotate the demo namespace
+        ```bash
+        kubectl create namespace edb-demo
+        marblerun namespace add edb-demo
+        ```
+    
+    * Deploy using helm
+        ```bash
+        helm install -f ./kubernetes-client/values.yaml edb-demo ./kubernetes-client -n edb-demo
+        ```
+
+1. Port forward the reader's web interface
+
+    ```bash
+    kubectl -n edb-demo port-forward svc/edb-reader-http 8008:8008 --address localhost >/dev/null &
+    ```
+
+1. Vists "http://localhost:8008"
+
+1. You should see new user data popping up every 10 seconds.
+
+## Docker
+
+1. Generate signing key
+
+```bash
+openssl genrsa -out private.pem -3 3072
+```
+
+1. Build the reader image
+
+```bash
+docker buildx build --secret id=signingkey,src=private.pem --target release_reader --tag ghcr.io/edgelesssys/edb-demo/reader:latest .
+```
+
+1. Build the writer image
+
+```bash
+docker buildx build --secret id=signingkey,src=private.pem --target release_writer --tag ghcr.io/edgelesssys/edb-demo/writer:latest .
+```
+
+
 ## To-Do
 * Write this more user-friendly
 * Get this running in Kubernetes 😭😭😭
