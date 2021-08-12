@@ -3,7 +3,7 @@
     "key": "../private.pem",
     "debug": false,
     "heapSize": 512,
-    "productID": 1,
+    "productID": 17,
     "securityVersion": 1,
     "mounts": null,
     "env": null

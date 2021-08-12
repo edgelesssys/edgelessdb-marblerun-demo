@@ -41,12 +41,10 @@ edb:
   # Set to start EDB in MarbleRun mode
   launchMarble: false
 
-  ## resource limits/requests
-  resources:
-    limits:
-      # Set to the same value as heapSize
-      sgx.intel.com/epc: "1Gi"
-      #kubernetes.azure.com/sgx_epc_mem_in_MiB: 100
+  # resource limits/requests
+  #resources:
+  #  limits:
+  #    sgx.intel.com/epc: "1Gi"
 
 storage:
   # EdgelessDB persistent storage spec
