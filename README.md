@@ -175,4 +175,3 @@ docker buildx build --secret id=signingkey,src=private.pem --target release_writ
 
 ## To-Do
 * Write this more user-friendly
-* Get this running in Kubernetes 😭😭😭
