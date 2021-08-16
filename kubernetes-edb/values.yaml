@@ -42,9 +42,11 @@ edb:
   launchMarble: false
 
   # resource limits/requests
-  #resources:
-  #  limits:
-  #    sgx.intel.com/epc: "1Gi"
+  resources:
+    limits:
+      sgx.intel.com/epc: "1Gi"
+      sgx.intel.com/provision: 1
+      sgx.intel.com/enclave: 1
 
 storage:
   # EdgelessDB persistent storage spec
