@@ -5,7 +5,7 @@ global:
     pullPolicy: IfNotPresent
     version: v0.1.0
     repository: ghcr.io/edgelesssys
-  
+
   createdBy: Helm
 
   # Additional annotations to add to all pods
@@ -21,7 +21,7 @@ global:
 
 edb:
   edbReplicas: 1
-  
+
   # The network address of the MySQL interface
   sqlApiHost: "0.0.0.0"
   sqlApiPort: 3306
@@ -44,7 +44,7 @@ edb:
   # resource limits/requests
   resources:
     limits:
-      sgx.intel.com/epc: "1Gi"
+      sgx.intel.com/epc: "10Mi"
       sgx.intel.com/provision: 1
       sgx.intel.com/enclave: 1
 
@@ -60,9 +60,9 @@ storage:
 # Tolerations constraints for control-plane components
 # https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
 tolerations:
-- key: sgx.intel.com/epc
-  operator: Exists
-  effect: NoSchedule
+  - key: sgx.intel.com/epc
+    operator: Exists
+    effect: NoSchedule
 
 # Node selection constraints for control-plane components
 # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector.

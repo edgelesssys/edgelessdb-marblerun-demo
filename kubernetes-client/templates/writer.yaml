@@ -38,3 +38,5 @@ spec:
           image: "{{ .Values.image.repository }}/edb-demo/writer:{{ .Values.image.version }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           name: edb-writer
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
