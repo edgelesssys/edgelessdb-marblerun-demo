@@ -51,8 +51,8 @@ spec:
               name: sql
             - containerPort: {{ .Values.edb.restApiPort }}
               name: http
-#          resources:
-#          {{- toYaml .Values.edb.resources | nindent 12 }}
+          resources:
+          {{- toYaml .Values.edb.resources | nindent 12 }}
           volumeMounts:
           - name: edgelessdb-storage
             mountPath: /data
