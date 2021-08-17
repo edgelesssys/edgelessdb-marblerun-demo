@@ -148,13 +148,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // setupDatabaseTLS sets up the TLS configuration used when establishing a new SQL connection
 func setupDatabaseTLS() error {
+	// Register EdgelessDB root certificate
 	log.Println("Attempting to connect to database...")
 	pem := []byte(os.Getenv(marble.MarbleEnvironmentRootCA))
 	rootCertPool := x509.NewCertPool()
 	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
 		return errors.New("could not add root cert from PEM")
 	}
-	mysql.RegisterTLSConfig("edgelessdb", &tls.Config{RootCAs: rootCertPool, ServerName: "localhost"})
+
+	// Get certificate + private key for reader instance
+	cert, err := tls.X509KeyPair([]byte(os.Getenv("CERT")), []byte(os.Getenv("KEY")))
+	if err != nil {
+		return err
+	}
+
+	mysql.RegisterTLSConfig("edgelessdb", &tls.Config{
+		RootCAs:      rootCertPool,
+		Certificates: []tls.Certificate{cert},
+	})
 
 	return nil
 }

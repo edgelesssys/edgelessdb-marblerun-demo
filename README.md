@@ -45,29 +45,26 @@ curl -k --data-binary @marblerun-manifest.json https://localhost:4433/manifest
 docker run --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edgelessdb_marble" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/edgelesssys/edgelessdb-sgx-4gb -marble
 ```
 
-7. Attest the MarbleRun cluster:
-```bash
-era -c ~/marblerun/build/coordinator-config.json -h localhost:4433 -output-chain marblerun-chain.pem
-```
-
-8. Deploy EdgelessDB manifest:
-```bash
-curl --cacert marblerun-chain.pem --data-binary @edb-manifest.json https://localhost:8080/manifest
-```
-
-9. Run the reader:
+7. Run the reader:
 ```bash
 EDG_MARBLE_TYPE=reader EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/reader-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun reader/reader
 ```
 
-10. Run the writer:
+8. Run the writer:
 ```bash
 EDG_MARBLE_TYPE=writer EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/writer-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun writer/writer
 ```
 
-11. Visit "http://localhost:8008"
+9. Visit "http://localhost:8008"
 
-12. You should see new user data popping up every 10 seconds.
+10. You should see new user data popping up every 10 seconds.
+
+You can verify the identity of the running MarbleRun cluster via attestation:
+```bash
+era -c ~/marblerun/build/coordinator-config.json -h localhost:4433 -output-chain marblerun-chain.pem
+```
+
+The deployed manifest can be verified via the SGX DCAP quote which can be queried over MarbleRun's `/quote` HTTP REST API endpoint. If you can verify the MarbleRun instance and manifest, you can also automatically verify EdgelessDB and the deployed manifest. However, if you like you can also additionally attestate the running EdgelessDB instance over its `/quote` HTTP REST API endpoint and compare it with the output from MarbleRun.
 
 ## Howto on Kubernetes
 
@@ -160,13 +157,13 @@ EDG_MARBLE_TYPE=writer EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUI
 openssl genrsa -out private.pem -3 3072
 ```
 
-1. Build the reader image
+2. Build the reader image
 
 ```bash
 docker buildx build --secret id=signingkey,src=private.pem --target release_reader --tag ghcr.io/edgelesssys/edb-demo/reader:latest .
 ```
 
-1. Build the writer image
+3. Build the writer image
 
 ```bash
 docker buildx build --secret id=signingkey,src=private.pem --target release_writer --tag ghcr.io/edgelesssys/edb-demo/writer:latest .
