@@ -113,19 +113,6 @@ The deployed manifest can be verified via the SGX DCAP quote which can be querie
         kubectl -n edgelessdb port-forward svc/edgelessdb-rest-api 8080:8080 --address localhost >/dev/null &
         ```
 
-
-1. Attest the MarbleRun cluster and retrieve the certificate chain
-    
-    ```bash
-    marblerun certificate chain $MARBLERUN -o marblerun-chain.pem
-    ```
-
-1. Deploy the EdgelessDB manifest
-
-    ```bash
-    curl --cacert marblerun-chain.pem --data-binary @edb-manifest.json https://localhost:8080/manifest
-    ```
-
 1. Launch `writer` and `reader` applications
 
     * Create and annotate the demo namespace
