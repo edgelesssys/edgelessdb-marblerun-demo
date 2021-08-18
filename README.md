@@ -8,7 +8,7 @@
 ## Environment
 We currently expect that you run this locally on a dev setup.
 
-## Howto
+## Howto - Local Deployment
 1. Generate signing key
 ```bash
 openssl genrsa -out private.pem -3 3072
@@ -66,7 +66,7 @@ era -c ~/marblerun/build/coordinator-config.json -h localhost:4433 -output-chain
 
 The deployed manifest can be verified via the SGX DCAP quote which can be queried over MarbleRun's `/quote` HTTP REST API endpoint. If you can verify the MarbleRun instance and manifest, you can also automatically verify EdgelessDB and the deployed manifest. However, if you like you can also additionally attestate the running EdgelessDB instance over its `/quote` HTTP REST API endpoint and compare it with the output from MarbleRun.
 
-## Howto on Kubernetes
+## Howto - Kubernetes Deployment
 
 1. Install MarbleRun
 
@@ -156,6 +156,7 @@ docker buildx build --secret id=signingkey,src=private.pem --target release_read
 docker buildx build --secret id=signingkey,src=private.pem --target release_writer --tag ghcr.io/edgelesssys/edb-demo/writer:latest .
 ```
 
+Note that you might need to change the tag in the Helm charts if you want to run a locally built image.
 
 ## To-Do
 * Write this more user-friendly
