@@ -6,11 +6,13 @@
             "SignerID": "67d7b00741440d29922a15a9ead427b6faf1d610238ae9826da345cea4fee0fe"
         },
         "reader": {
+            "Debug": true,
             "SecurityVersion": 1,
             "ProductID": 17,
             "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
         },
         "writer": {
+            "Debug": true,
             "SecurityVersion": 1,
             "ProductID": 18,
             "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
@@ -75,7 +77,11 @@
                     "Organization": [
                         "My EdgelessDB root"
                     ]
-                }
+                },
+                "DNSNames": [
+                    "localhost",
+                    "edgelessdb-sql-api.edgelessdb.svc.cluster.local"
+                ]
             }
         },
         "reader_cert": {

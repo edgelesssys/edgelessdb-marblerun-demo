@@ -1,7 +1,7 @@
 {
     "exe": "reader",
     "key": "../private.pem",
-    "debug": false,
+    "debug": true,
     "heapSize": 512,
     "productID": 17,
     "securityVersion": 1,

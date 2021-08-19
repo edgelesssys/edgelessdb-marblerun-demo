@@ -83,8 +83,20 @@ func main() {
 		port = "8080"
 		log.Printf("Defaulting to port %s", port)
 	}
+
+	cert, err := tls.X509KeyPair([]byte(os.Getenv("CERT")), []byte(os.Getenv("KEY")))
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr: ":" + port,
+		TLSConfig: &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		},
+	}
+
 	log.Printf("Listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	if err := server.ListenAndServeTLS("", ""); err != nil {
 		log.Fatal(err)
 	}
 }
