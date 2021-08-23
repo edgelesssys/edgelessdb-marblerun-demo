@@ -19,7 +19,7 @@
         }
     },
     "Marbles": {
-        "edgelessdb_marble": {
+        "edgelessdbMarble": {
             "Package": "edgelessdb",
             "Parameters": {
                 "Env": {

@@ -1,24 +1,36 @@
 # EdgelessDB 🤝 MarbleRun
 
+This demo showcases the integration of [EdgelessDB](https://github.com/edgelesssys/edgelessdb), a MySQL-compatible database running in an enclave, with [MarbleRun](https://github.com/edgelesssys/marblerun), the control plane for confidential computing.
+
+We will be creating two client applications to interact with EdgelessDB: one to write information to the database; and one to read, and serve it on a web-interface.
+When using EdgelessDB as a standalone application, one needs to manage certificates for connecting clients, to ensure only privileged clients are allowed to manipulate data.
+Using MarbleRun, we can automate secure distribution of certificates to both clients and EdgelessDB itself, while also verifying clients run inside enclaves under predefined configurations.
+
 
 ## Environment
 We currently expect that you run this locally on a dev setup.
 
 ## Local Deployment
 
+Local Deployment assumes you have access to an SGX capable machine and MarbleRun is ready to go.
+While not necessary, for ease of use we also assume MarbleRun, EdgelessDB and the two client applications, all run on the same machine.
+
 ### Requirements
 1. [MarbleRun](https://github.com/edgelesssys/marblerun) v0.5.0 or newer
-2. EGo
-3. Docker
+2. [EGo](https://github.com/edgelesssys/ego) v0.3.2 or newer
+3. [Docker](https://www.docker.com/)
 
 ### Howto
 
 1. Generate a signing key
+
+    This key will be used to sign the client applications
     ```bash
     openssl genrsa -out private.pem -3 3072
     ```
 
 2. Build the reader and writer Marbles
+
     ```bash
     cd reader
     ego-go build reader.go
@@ -30,6 +42,7 @@ We currently expect that you run this locally on a dev setup.
     ```
 
 3. Retrieve SignerID of the Marbles
+
     ```bash
     ego signerid reader/reader
     ego signerid writer/writer
@@ -52,31 +65,42 @@ We currently expect that you run this locally on a dev setup.
     ```
 
 4. Launch the Coordinator
+
+    You can download the signed binary from [MarbleRun's releases page](https://github.com/edgelesssys/marblerun/releases), or you can follow the [build instructions](https://github.com/edgelesssys/marblerun/blob/master/BUILD.md) to built your own.
     ```bash
-    erthost ~/marblerun/build/coordinator-enclave.signed
+    erthost coordinator-enclave.signed
     ```
 
 5. Deploy the MarbleRun manifest
+
     ```bash
     curl -k --data-binary @marblerun-manifest.json https://localhost:4433/manifest
     ```
 
 6. Launch EdgelessDB as a Marble
+
     ```bash
-    docker run -it --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edgelessdb_marble" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/ edgelesssys/edgelessdb-sgx-4gb -marble
+    docker run -it --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=edgelessdbMarble" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/ edgelesssys/edgelessdb-sgx-4gb -marble
     ```
 
+    Usually, when running EdgelessDB without MarbleRun, users are required to upload a manifest to initialize EdgelessDB. With MarbleRun however, we can let the Coordinator take care of distributing this manifest.
+    Taking a look at `marblerun-manifest.json`, the Marble `edgelessdbMarble` specifies a base64 encoded file `/data/manifest.json`. The `Data` field is the base64 encoding of the file `edb-manifest.json`.
+    Upon start of EdgelessDB as a Marble, this file will be provided to the Marble by the Coordinator, saving us the manual initialization.
+
 7. Run the reader Marble
+
     ```bash
     EDG_MARBLE_TYPE=reader EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/reader-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun reader/reader
     ```
 
 8. Run the writer Marble
+
     ```bash
     EDG_MARBLE_TYPE=writer EDG_MARBLE_COORDINATOR_ADDR=localhost:2001 EDG_MARBLE_UUID_FILE=~/writer-uuid EDG_MARBLE_DNS_NAMES=localhost ego marblerun writer/writer
     ```
 
 9. Verify the MarbleRun cluster
+
     Verify the identity of the running MarbleRun cluster via remote attestation using [era](https://github.com/edgelesssys/era):
     ```bash
     era -c ~/marblerun/build/coordinator-config.json -h localhost:4433 -output-chain marblerun-chain.pem
@@ -132,12 +156,15 @@ We currently expect that you run this locally on a dev setup.
 1. Launch EdgelessDB
 
     * Create and annotate the target namespace
+
+        Doing this allows MarbleRun's admission controller to inject SGX resources and MarbleRun specific environment variables into the starting Marble Pod.
+        This saves us having to manually specify these values and allows for device plugin independent Helm charts.
         ```bash
         kubectl create namespace edgelessdb
         marblerun namespace add edgelessdb
         ```
 
-    * Deploy the application using helm
+    * Deploy the application using Helm
         ```bash
         helm install -f ./kubernetes-edb/values.yaml edgelessdb ./kubernetes-edb -n edgelessdb --set edb.launchMarble=true
         ```
@@ -194,6 +221,3 @@ We currently expect that you run this locally on a dev setup.
     ```
 
     Note that you might need to change the tag in the Helm charts if you want to run a locally built image.
-
-## To-Do
-* Add some intro text explaining what the demo does
