@@ -23,9 +23,9 @@
             "Package": "edgelessdb",
             "Parameters": {
                 "Env": {
-                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edb_masterkey.Private }}",
-                    "EDB_ROOT_CERT": "{{ pem .Secrets.edb_rootcert.Cert }}",
-                    "EDB_ROOT_KEY": "{{ pem .Secrets.edb_rootcert.Private }}",
+                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edbMasterkey.Private }}",
+                    "EDB_ROOT_CERT": "{{ pem .Secrets.edbRootcert.Cert }}",
+                    "EDB_ROOT_KEY": "{{ pem .Secrets.edbRootcert.Private }}",
                     "EDG_EDB_MANIFEST_FILE": "/data/manifest.json"
                 },
                 "Argv": [
@@ -46,8 +46,8 @@
             "Parameters": {
                 "Env": {
                     "PORT": "8008",
-                    "CERT": "{{ pem .Secrets.reader_cert.Cert }}",
-                    "KEY": "{{ pem .Secrets.reader_cert.Private }}"
+                    "CERT": "{{ pem .Secrets.readerCert.Cert }}",
+                    "KEY": "{{ pem .Secrets.readerCert.Private }}"
                 }
             }
         },
@@ -55,19 +55,19 @@
             "Package": "writer",
             "Parameters": {
                 "Env": {
-                    "CERT": "{{ pem .Secrets.writer_cert.Cert }}",
-                    "KEY": "{{ pem .Secrets.writer_cert.Private }}"
+                    "CERT": "{{ pem .Secrets.writerCert.Cert }}",
+                    "KEY": "{{ pem .Secrets.writerCert.Private }}"
                 }
             }
         }
     },
     "Secrets": {
-        "edb_masterkey": {
+        "edbMasterkey": {
             "Size": 128,
             "Shared": true,
             "Type": "symmetric-key"
         },
-        "edb_rootcert": {
+        "edbRootcert": {
             "Size": 256,
             "Type": "cert-ecdsa",
             "Shared": true,
@@ -84,7 +84,7 @@
                 ]
             }
         },
-        "reader_cert": {
+        "readerCert": {
             "Size": 256,
             "Type": "cert-ecdsa",
             "Shared": false,
@@ -94,7 +94,7 @@
                 }
             }
         },
-        "writer_cert": {
+        "writerCert": {
             "Size": 256,
             "Type": "cert-ecdsa",
             "Shared": false,
