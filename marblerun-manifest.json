@@ -19,13 +19,13 @@
         }
     },
     "Marbles": {
-        "edgelessdbMarble": {
+        "EdgelessDB": {
             "Package": "edgelessdb",
             "Parameters": {
                 "Env": {
-                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edbMasterkey.Private }}",
-                    "EDB_ROOT_CERT": "{{ pem .Secrets.edbRootcert.Cert }}",
-                    "EDB_ROOT_KEY": "{{ pem .Secrets.edbRootcert.Private }}",
+                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edbMasterKey.Private }}",
+                    "EDB_ROOT_CERT": "{{ pem .Secrets.edbRootCert.Cert }}",
+                    "EDB_ROOT_KEY": "{{ pem .Secrets.edbRootCert.Private }}",
                     "EDG_EDB_MANIFEST_FILE": "/data/manifest.json"
                 },
                 "Argv": [
@@ -62,12 +62,12 @@
         }
     },
     "Secrets": {
-        "edbMasterkey": {
+        "edbMasterKey": {
             "Size": 128,
             "Shared": true,
             "Type": "symmetric-key"
         },
-        "edbRootcert": {
+        "edbRootCert": {
             "Size": 256,
             "Type": "cert-ecdsa",
             "Shared": true,

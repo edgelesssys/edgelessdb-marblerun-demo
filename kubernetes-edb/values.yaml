@@ -37,7 +37,7 @@ edb:
   # Heap size of the database enclave in GB. Currently Edgeless Systems provides images for 1GB and 4GB heap sizes.
   heapSize: 1
   # Label needed when EDB is deployed as a Marble with MarbleRun
-  marbleType: edgelessdbMarble
+  marbleType: EdgelessDB
   # Set to start EDB in MarbleRun mode
   launchMarble: false
 
