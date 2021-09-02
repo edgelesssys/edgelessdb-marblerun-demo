@@ -6,50 +6,68 @@
             "SignerID": "67d7b00741440d29922a15a9ead427b6faf1d610238ae9826da345cea4fee0fe"
         },
         "reader": {
+            "Debug": true,
             "SecurityVersion": 1,
             "ProductID": 17,
             "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
         },
         "writer": {
+            "Debug": true,
             "SecurityVersion": 1,
             "ProductID": 18,
             "SignerID": "43361affedeb75affee9baec7e054a5e14883213e5a121b67d74a0e12e9d2b7a"
         }
     },
     "Marbles": {
-        "edgelessdb_marble": {
+        "EdgelessDB": {
             "Package": "edgelessdb",
             "Parameters": {
                 "Env": {
-                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edb_masterkey.Private }}",
-                    "EDB_ROOT_CERT": "{{ pem .Secrets.edb_rootcert.Cert }}",
-                    "EDB_ROOT_KEY": "{{ pem .Secrets.edb_rootcert.Private }}"
+                    "EROCKSDB_MASTERKEY": "{{ hex .Secrets.edbMasterKey.Private }}",
+                    "EDB_ROOT_CERT": "{{ pem .Secrets.edbRootCert.Cert }}",
+                    "EDB_ROOT_KEY": "{{ pem .Secrets.edbRootCert.Private }}",
+                    "EDG_EDB_MANIFEST_FILE": "/data/manifest.json"
                 },
                 "Argv": [
                     "./edb",
                     "-marble"
-                ]
+                ],
+                "Files": {
+                    "/data/manifest.json": {
+                        "Encoding": "base64",
+                        "NoTemplates": false,
+                        "Data": "ewogICAgInNxbCI6IFsKICAgICAgICAiQ1JFQVRFIFVTRVIgcmVhZGVyIFJFUVVJUkUgSVNTVUVSICcvQ049TWFyYmxlUnVuIENvb3JkaW5hdG9yIC0gSW50ZXJtZWRpYXRlIENBJyBTVUJKRUNUICcvQ049UmVhZGVyJyIsCiAgICAgICAgIkNSRUFURSBVU0VSIHdyaXRlciBSRVFVSVJFIElTU1VFUiAnL0NOPU1hcmJsZVJ1biBDb29yZGluYXRvciAtIEludGVybWVkaWF0ZSBDQScgU1VCSkVDVCAnL0NOPVdyaXRlciciLAogICAgICAgICJDUkVBVEUgREFUQUJBU0UgdXNlcnMgQ0hBUkFDVEVSIFNFVCB1dGY4bWI0IENPTExBVEUgdXRmOG1iNF91bmljb2RlX2NpIiwKICAgICAgICAiQ1JFQVRFIFRBQkxFIHVzZXJzLmRhdGEgKGlkIE1FRElVTUlOVCBOT1QgTlVMTCBBVVRPX0lOQ1JFTUVOVCwgZmlyc3RfbmFtZSBWQVJDSEFSKDY0KSBOT1QgTlVMTCwgbGFzdF9uYW1lIFZBUkNIQVIoNjQpIE5PVCBOVUxMLCBlbWFpbCBWQVJDSEFSKDI1NSkgTk9UIE5VTEwsIFBSSU1BUlkgS0VZIChpZCkpIiwKICAgICAgICAiR1JBTlQgU0VMRUNUIE9OIHVzZXJzLmRhdGEgVE8gcmVhZGVyIiwKICAgICAgICAiR1JBTlQgSU5TRVJUIE9OIHVzZXJzLmRhdGEgVE8gd3JpdGVyIgogICAgXSwKICAgICJjYSI6ICJ7eyBqcyAocGVtIC5NYXJibGVSdW4uUm9vdENBLkNlcnQpIH19Igp9Cg=="
+                    }
+                }
             }
         },
         "reader": {
             "Package": "reader",
             "Parameters": {
                 "Env": {
-                    "PORT": "8008"
+                    "PORT": "8008",
+                    "CERT": "{{ pem .Secrets.readerCert.Cert }}",
+                    "KEY": "{{ pem .Secrets.readerCert.Private }}"
                 }
             }
         },
         "writer": {
-            "Package": "writer"
+            "Package": "writer",
+            "Parameters": {
+                "Env": {
+                    "CERT": "{{ pem .Secrets.writerCert.Cert }}",
+                    "KEY": "{{ pem .Secrets.writerCert.Private }}"
+                }
+            }
         }
     },
     "Secrets": {
-        "edb_masterkey": {
+        "edbMasterKey": {
             "Size": 128,
             "Shared": true,
             "Type": "symmetric-key"
         },
-        "edb_rootcert": {
+        "edbRootCert": {
             "Size": 256,
             "Type": "cert-ecdsa",
             "Shared": true,
@@ -59,6 +77,30 @@
                     "Organization": [
                         "My EdgelessDB root"
                     ]
+                },
+                "DNSNames": [
+                    "localhost",
+                    "edgelessdb-sql-api.edgelessdb.svc.cluster.local"
+                ]
+            }
+        },
+        "readerCert": {
+            "Size": 256,
+            "Type": "cert-ecdsa",
+            "Shared": false,
+            "Cert": {
+                "Subject": {
+                    "CommonName": "Reader"
+                }
+            }
+        },
+        "writerCert": {
+            "Size": 256,
+            "Type": "cert-ecdsa",
+            "Shared": false,
+            "Cert": {
+                "Subject": {
+                    "CommonName": "Writer"
                 }
             }
         }

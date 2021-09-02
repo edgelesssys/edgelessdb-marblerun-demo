@@ -83,8 +83,20 @@ func main() {
 		port = "8080"
 		log.Printf("Defaulting to port %s", port)
 	}
+
+	cert, err := tls.X509KeyPair([]byte(os.Getenv("CERT")), []byte(os.Getenv("KEY")))
+	if err != nil {
+		log.Fatal(err)
+	}
+	server := http.Server{
+		Addr: ":" + port,
+		TLSConfig: &tls.Config{
+			Certificates: []tls.Certificate{cert},
+		},
+	}
+
 	log.Printf("Listening on port %s", port)
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	if err := server.ListenAndServeTLS("", ""); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -148,13 +160,24 @@ func handler(w http.ResponseWriter, r *http.Request) {
 
 // setupDatabaseTLS sets up the TLS configuration used when establishing a new SQL connection
 func setupDatabaseTLS() error {
+	// Register EdgelessDB root certificate
 	log.Println("Attempting to connect to database...")
 	pem := []byte(os.Getenv(marble.MarbleEnvironmentRootCA))
 	rootCertPool := x509.NewCertPool()
 	if ok := rootCertPool.AppendCertsFromPEM(pem); !ok {
 		return errors.New("could not add root cert from PEM")
 	}
-	mysql.RegisterTLSConfig("edgelessdb", &tls.Config{RootCAs: rootCertPool, ServerName: "localhost"})
+
+	// Get certificate + private key for reader instance
+	cert, err := tls.X509KeyPair([]byte(os.Getenv("CERT")), []byte(os.Getenv("KEY")))
+	if err != nil {
+		return err
+	}
+
+	mysql.RegisterTLSConfig("edgelessdb", &tls.Config{
+		RootCAs:      rootCertPool,
+		Certificates: []tls.Certificate{cert},
+	})
 
 	return nil
 }
