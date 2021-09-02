@@ -1,7 +1,7 @@
 {
     "sql": [
-        "CREATE USER reader REQUIRE ISSUER '/CN=Marblerun Coordinator - Intermediate CA' SUBJECT '/CN=Reader'",
-        "CREATE USER writer REQUIRE ISSUER '/CN=Marblerun Coordinator - Intermediate CA' SUBJECT '/CN=Writer'",
+        "CREATE USER reader REQUIRE ISSUER '/CN=MarbleRun Coordinator - Intermediate CA' SUBJECT '/CN=Reader'",
+        "CREATE USER writer REQUIRE ISSUER '/CN=MarbleRun Coordinator - Intermediate CA' SUBJECT '/CN=Writer'",
         "CREATE DATABASE users CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
         "CREATE TABLE users.data (id MEDIUMINT NOT NULL AUTO_INCREMENT, first_name VARCHAR(64) NOT NULL, last_name VARCHAR(64) NOT NULL, email VARCHAR(255) NOT NULL, PRIMARY KEY (id))",
         "GRANT SELECT ON users.data TO reader",
