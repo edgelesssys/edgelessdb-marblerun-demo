@@ -7,5 +7,5 @@
         "GRANT SELECT ON users.data TO reader",
         "GRANT INSERT ON users.data TO writer"
     ],
-    "ca": "{{ js (pem .Marblerun.RootCA.Cert) }}"
+    "ca": "{{ js (pem .MarbleRun.RootCA.Cert) }}"
 }
