@@ -89,7 +89,7 @@ While not necessary, for ease of use we also assume MarbleRun, EdgelessDB and th
 6. Launch EdgelessDB as a Marble
 
     ```bash
-    docker run -it --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=EdgelessDB" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/ edgelesssys/edgelessdb-sgx-4gb -marble
+    docker run -it --network host --name my-edb --privileged -e "EDG_MARBLE_TYPE=EdgelessDB" -e "EDG_MARBLE_COORDINATOR_ADDR=localhost:2001" -e "EDG_MARBLE_UUID_FILE=uuid" -e "EDG_MARBLE_DNS_NAMES=localhost" -v /dev/sgx:/dev/sgx -t ghcr.io/edgelesssys/edgelessdb-sgx-4gb -marble
     ```
 
     Usually, when running EdgelessDB without MarbleRun, users are required to upload a manifest to initialize EdgelessDB. With MarbleRun however, we can let the Coordinator take care of distributing this manifest.
@@ -144,7 +144,7 @@ Making use of MarbleRun's CLI and Kubernetes intergration, many tasks, such as s
 1. [MarbleRun CLI](https://docs.edgeless.systems/marblerun/#/reference/cli?id=installation)
 1. [Helm](https://helm.sh/docs/intro/) at v3 or newer
 
-### Howto 
+### Howto
 
 1. Install MarbleRun
 
@@ -168,7 +168,7 @@ Making use of MarbleRun's CLI and Kubernetes intergration, many tasks, such as s
     ```
 
 1. Deploy the MarbleRun manifest
-    
+
     ```bash
     marblerun manifest set marblerun-manifest.json $MARBLERUN
     ```
@@ -196,14 +196,14 @@ Making use of MarbleRun's CLI and Kubernetes intergration, many tasks, such as s
         kubectl create namespace edb-demo
         marblerun namespace add edb-demo
         ```
-    
+
     * Deploy using Helm
         ```bash
         helm install -f ./kubernetes-client/values.yaml edb-demo ./kubernetes-client -n edb-demo
         ```
 
 1. Connect to the readers web interface
-    
+
     Forward the interface to localhost
     ```bash
     kubectl -n edb-demo port-forward svc/edb-reader-http 8008:8008 --address localhost >/dev/null &
