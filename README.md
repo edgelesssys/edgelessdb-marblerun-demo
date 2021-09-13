@@ -100,7 +100,7 @@ While not necessary, for ease of use we also assume MarbleRun, EdgelessDB, and t
 
     Usually, when running EdgelessDB without MarbleRun, users are required to upload a manifest to initialize EdgelessDB. With MarbleRun however, we let the Coordinator take care of distributing this manifest.
     Taking a look at `marblerun-manifest.json`, the Marble `EdgelessDB` specifies a base64 encoded file `/data/manifest.json`. The `Data` field is the base64 encoding of the file `edb-manifest.json`.
-    Upon the start of EdgelessDB as a Marble, this file will be provided by the Coordinator, saving us the manual initialization.
+    Upon the initial start of EdgelessDB as a Marble, this file will be provided by the Coordinator, saving us the manual initialization.
 
 7. Run the client applications
 
