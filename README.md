@@ -136,7 +136,7 @@ While not necessary, for ease of use we also assume MarbleRun, EdgelessDB, and t
 
     Visit "https://localhost:8008"
 
-    You’ll be presented with a certificate warning because your browser does not know MarbleRun’s root certificate as a root of trust. You can safely ignore this message since the authenticity of the MarbleRun instance has been verified in the previous step.
+    You’ll be presented with a certificate warning because your browser does not know MarbleRun’s root certificate as a root of trust. You can safely ignore this message.
 
     Once connected you should see new user data popping up every 10 seconds.
 
@@ -227,7 +227,7 @@ Making use of MarbleRun's CLI and Kubernetes integration, many tasks, such as se
 
     Visit "https://localhost:8008"
 
-    You’ll be presented with a certificate warning because your browser does not know MarbleRun’s root certificate as a root of trust. You can safely ignore this message since the authenticity of the MarbleRun instance has been verified every time the MarbleRun CLI is connected to the Coordinator.
+    You’ll be presented with a certificate warning because your browser does not know MarbleRun’s root certificate as a root of trust. You can safely ignore this message.
 
     Once connected you should see new user data popping up every 10 seconds.
 
