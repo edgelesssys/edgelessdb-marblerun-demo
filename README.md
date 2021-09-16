@@ -186,7 +186,11 @@ Making use of MarbleRun's CLI and Kubernetes intergration, many tasks, such as s
 
     * Deploy the application using Helm
         ```bash
-        helm install -f ./kubernetes-edb/values.yaml edgelessdb ./kubernetes-edb -n edgelessdb --set edb.launchMarble=true
+        # Add the helm repo
+        helm repo add edgeless https://helm.edgeless.systems/stable
+        helm repo update
+        # Install the chart
+        helm install edgelessdb edgeless/edgelessdb --set edb.launchMarble=true --namespace edgelessdb
         ```
 
 1. Launch `writer` and `reader` Marbles
@@ -199,7 +203,7 @@ Making use of MarbleRun's CLI and Kubernetes intergration, many tasks, such as s
 
     * Deploy using Helm
         ```bash
-        helm install -f ./kubernetes-client/values.yaml edb-demo ./kubernetes-client -n edb-demo
+        helm install -f ./kubernetes/values.yaml edb-demo ./kubernetes-client -n edb-demo
         ```
 
 1. Connect to the readers web interface
