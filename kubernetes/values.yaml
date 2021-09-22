@@ -4,6 +4,8 @@ image:
   pullPolicy: IfNotPresent
   version: v0.1.0
   repository: ghcr.io/edgelesssys
+  imagePullSecrets:
+    - name: regcred
 
   createdBy: Helm
 
