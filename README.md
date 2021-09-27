@@ -182,16 +182,6 @@ Making use of MarbleRun's CLI and Kubernetes integration, many tasks, such as se
 
 1. Launch EdgelessDB
 
-    * Create and annotate the target namespace
-
-        Doing this allows MarbleRun's admission controller to inject SGX resources and MarbleRun specific environment variables into the starting Marble Pod.
-        This saves us having to manually specify these values and allows for device plugin-independent Helm charts.
-
-        ```bash
-        kubectl create namespace edgelessdb
-        marblerun namespace add edgelessdb
-        ```
-
     * Deploy the application using Helm
 
         ```bash
@@ -199,23 +189,17 @@ Making use of MarbleRun's CLI and Kubernetes integration, many tasks, such as se
         helm repo add edgeless https://helm.edgeless.systems/stable
         helm repo update
         # Install the chart
-        helm install edgelessdb edgeless/edgelessdb --set edb.launchMarble=true --namespace edgelessdb
+        helm install edgelessdb edgeless/edgelessdb --set edb.launchMarble=true --create-namespace -n edgelessdb
         ```
+
+    MarbleRun's admission controller will automatically inject SGX resources and MarbleRun specific environment variables into the starting Marble Pod.
+    This saves us having to manually specify these values and allows for device plugin-independent Helm charts.
 
 1. Launch `writer` and `reader` Marbles
 
-    * Create and annotate the demo namespace
-
-        ```bash
-        kubectl create namespace edb-demo
-        marblerun namespace add edb-demo
-        ```
-
-    * Deploy using Helm
-
-        ```bash
-        helm install -f ./kubernetes/values.yaml edb-demo ./kubernetes-client -n edb-demo
-        ```
+    ```bash
+    helm install -f ./kubernetes/values.yaml edb-demo ./kubernetes-client --create-namespace -n edb-demo
+    ```
 
 1. Connect to the reader's web interface
 
