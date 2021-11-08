@@ -20,6 +20,7 @@ image:
   # pullSecret:
   # pullSecret: my-private-docker-registry-login-secret
 
+resourceInjection: "enabled"
 simulation: "0"
 sqlPort: 3306
 

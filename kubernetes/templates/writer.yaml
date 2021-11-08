@@ -20,6 +20,7 @@ spec:
         app.kubernetes.io/part-of: edgelessdb-demo
         app.kubernetes.io/version: {{ .Values.image.version }}
         marblerun/marbletype: writer
+        marblerun/resource-injection: {{ .Values.resourceInjection }}
     spec:
       {{- with .Values.tolerations }}
       tolerations:
